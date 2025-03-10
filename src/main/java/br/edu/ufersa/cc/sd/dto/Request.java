@@ -6,20 +6,20 @@ import br.edu.ufersa.cc.sd.enums.Operation;
 import lombok.Data;
 
 @Data
-public class Request<T extends Serializable> implements Serializable {
+public class Request<I extends Serializable> implements Serializable {
 
     private final Operation operation;
-    private final T item;
-    private final Class<T> type;
+    private final I item;
+    private final Class<I> type;
 
     @SuppressWarnings("unchecked")
-    public Request(final Operation operation, final T item) {
+    public Request(final Operation operation, final I item) {
         this.operation = operation;
         this.item = item;
-        this.type = (Class<T>) item.getClass();
+        this.type = (Class<I>) item.getClass();
     }
 
-    public Request(final Operation operation, final Class<T> type) {
+    public Request(final Operation operation, final Class<I> type) {
         this.operation = operation;
         this.type = type;
         this.item = null;

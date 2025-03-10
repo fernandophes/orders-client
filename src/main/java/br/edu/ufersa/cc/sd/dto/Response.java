@@ -1,7 +1,6 @@
 package br.edu.ufersa.cc.sd.dto;
 
 import java.io.Serializable;
-import java.util.List;
 
 import br.edu.ufersa.cc.sd.enums.ResponseStatus;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,37 @@ public class Response<T extends Serializable> implements Serializable {
 
     private final ResponseStatus status;
     private final String message;
-    private final List<T> items;
+    private final T item;
     private final Class<T> type;
+
+    public Response(ResponseStatus status) {
+        this.status = status;
+        this.message = null;
+        this.item = null;
+        this.type = null;
+    }
+
+    public Response(T item) {
+        this(item, null);
+    }
+
+    public Response(T item, String message) {
+        this(ResponseStatus.OK, message, item);
+    }
+
+    public Response(ResponseStatus status, String message) {
+        this.status = status;
+        this.message = message;
+        this.item = null;
+        this.type = null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Response(ResponseStatus status, String message, T item) {
+        this.status = status;
+        this.message = message;
+        this.item = item;
+        this.type = (Class<T>) item.getClass();
+    }
 
 }

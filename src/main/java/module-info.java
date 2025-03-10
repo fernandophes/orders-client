@@ -9,5 +9,7 @@ module br.edu.ufersa.cc.sd {
     requires static lombok;
 
     opens br.edu.ufersa.cc.sd to javafx.fxml;
+    exports br.edu.ufersa.cc.sd.models;
+    exports br.edu.ufersa.cc.sd.services;
     exports br.edu.ufersa.cc.sd;
 }

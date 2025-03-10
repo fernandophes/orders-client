@@ -8,7 +8,7 @@
             "type": "java",
             "name": "App",
             "request": "launch",
-            "mainClass": "br.edu.ufersa.cc.sd.App",
+            "mainClass": "br.edu.ufersa.cc.sd/br.edu.ufersa.cc.sd.App",
             "projectName": "orders-client"
         }
     ]

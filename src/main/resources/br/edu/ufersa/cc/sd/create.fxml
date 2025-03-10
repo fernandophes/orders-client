@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox alignment="TOP_CENTER" minHeight="600.0" minWidth="1200.0" style="-fx-background-color: #000;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="br.edu.ufersa.cc.sd.CreateController">
+    <children>
+          <StackPane alignment="CENTER_LEFT">
+              <children>
+                  <TextFlow textAlignment="CENTER" StackPane.alignment="CENTER">
+                      <children>
+                          <Label text="Listagem de Ordens de Serviço" textAlignment="RIGHT" textFill="#aaaaaa" wrapText="true">
+                              <font>
+                                  <Font name="System Bold" size="18.0" />
+                              </font>
+                          </Label>
+                      </children>
+                      <padding>
+                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                      </padding>
+                  </TextFlow>
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
+               <children>
+                        <Button contentDisplay="CENTER" onAction="#switchToListAll" prefHeight="36.0" prefWidth="100.0" style="-fx-background-color: #484848; -fx-padding: 10px;" text="Cancelar" textFill="WHITE">
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                        </Button>
+               </children>
+            </HBox>
+              </children>
+          </StackPane>
+      <Pane prefHeight="50.0" />
+      <HBox alignment="CENTER" spacing="16.0">
+         <children>
+            <VBox alignment="TOP_CENTER" prefWidth="300.0" spacing="12.0" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 16px;">
+               <children>
+                  <Label fx:id="labelShow" text="Detalhes da Ordem" textAlignment="CENTER" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Label>
+                  <TextField fx:id="nameShow" alignment="CENTER" onKeyTyped="#verifySaveButton" promptText="Nome" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-text-fill: #fff;">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="descriptionShow" alignment="CENTER" layoutX="10.0" layoutY="50.0" prefHeight="75.0" promptText="Descrição" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-text-fill: #fff;" />
+                  <Button fx:id="saveButton" disable="true" mnemonicParsing="false" onAction="#save" style="-fx-background-color: #fff;" text="Salvar">
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+               </padding>
+            </VBox>
+         </children>
+      </HBox>
+    </children>
+   <padding>
+      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+   </padding>
+</VBox>

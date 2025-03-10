@@ -15,6 +15,7 @@ public class Order implements Serializable {
     private String name;
     private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime doneAt;
 
     public String toString() {
         return JsonUtils.toJson(this);

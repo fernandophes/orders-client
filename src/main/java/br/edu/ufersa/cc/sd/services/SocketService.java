@@ -13,13 +13,26 @@ import br.edu.ufersa.cc.sd.dto.Request;
 import br.edu.ufersa.cc.sd.dto.Response;
 import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SocketService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SocketService.class.getSimpleName());
 
     private static final String HOST = "localhost";
     private static final Integer PORT = 8484;
+
+    private static SocketService instance;
+
+    public static SocketService getInstance() {
+        if (instance == null) {
+            instance = new SocketService();
+        }
+
+        return instance;
+    }
 
     public <T extends Serializable> Response<T> call(final Request<T> request) {
         return callAndTransform(request);
