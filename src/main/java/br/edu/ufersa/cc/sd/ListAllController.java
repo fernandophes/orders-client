@@ -64,11 +64,6 @@ public class ListAllController {
     }
 
     @FXML
-    private void switchToHome() throws IOException {
-        App.setRoot("home");
-    }
-
-    @FXML
     private void switchToCreate() throws IOException {
         App.setRoot("create");
     }

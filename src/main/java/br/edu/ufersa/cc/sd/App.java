@@ -19,13 +19,17 @@ public class App extends Application {
 
     private static Scene scene;
 
+    public static void setScene(Scene scene) {
+        App.scene = scene;
+    }
+
     @Override
     public void start(final Stage stage) throws IOException {
         final var server = new ServerSimulator();
         final var serverThread = new Thread(server);
         serverThread.start();
 
-        scene = new Scene(loadFXML("create"), 640, 480);
+        setScene(new Scene(loadFXML("listAll"), 640, 480));
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
