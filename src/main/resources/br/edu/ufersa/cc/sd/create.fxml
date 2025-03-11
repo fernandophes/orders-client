@@ -17,7 +17,7 @@
               <children>
                   <TextFlow textAlignment="CENTER" StackPane.alignment="CENTER">
                       <children>
-                          <Label text="Listagem de Ordens de Serviço" textAlignment="RIGHT" textFill="#aaaaaa" wrapText="true">
+                          <Label text="Cadastrando Ordem de Serviço" textAlignment="RIGHT" textFill="#aaaaaa" wrapText="true">
                               <font>
                                   <Font name="System Bold" size="18.0" />
                               </font>
@@ -43,7 +43,7 @@
          <children>
             <VBox alignment="TOP_CENTER" prefWidth="300.0" spacing="12.0" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 16px;">
                <children>
-                  <Label fx:id="labelShow" text="Detalhes da Ordem" textAlignment="CENTER" textFill="WHITE">
+                  <Label fx:id="labelShow" text="Dados da Ordem" textAlignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
