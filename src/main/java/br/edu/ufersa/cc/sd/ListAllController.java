@@ -41,6 +41,9 @@ public class ListAllController {
     private Order currentOrder;
 
     @FXML
+    private Label countLabel;
+
+    @FXML
     private Label labelShow;
 
     @FXML
@@ -88,8 +91,11 @@ public class ListAllController {
         createdAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("createdAt"));
         doneAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("doneAt"));
 
-        final var orders = FXCollections.observableArrayList(service.list());
+        final var orders = FXCollections.observableArrayList(service.listAll());
         table.setItems(orders);
+
+        final var count = service.countAll();
+        countLabel.setText("Total: " + count);
     }
 
     @FXML

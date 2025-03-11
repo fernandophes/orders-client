@@ -22,7 +22,11 @@ public class OrderService {
         return instance;
     }
 
-    public List<Order> list() {
+    public Long countAll() {
+        return orderRepository.countAll();
+    }
+
+    public List<Order> listAll() {
         return orderRepository.listAll();
     }
 
