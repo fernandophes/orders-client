@@ -7,6 +7,7 @@ import br.edu.ufersa.cc.sd.dto.Request;
 import br.edu.ufersa.cc.sd.dto.Response;
 import br.edu.ufersa.cc.sd.enums.Operation;
 import br.edu.ufersa.cc.sd.enums.ResponseStatus;
+import br.edu.ufersa.cc.sd.exceptions.NotFoundException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.services.SocketService;
@@ -43,7 +44,11 @@ public class OrderRepository {
         final var response = socketService.call(request);
 
         if (ResponseStatus.ERROR.equals(response.getStatus())) {
-            throw new OperationException(response.getMessage());
+            if (response.getMessage().equals("Ordem não encontrada")) {
+                throw new NotFoundException(response.getMessage());
+            } else {
+                throw new OperationException(response.getMessage());
+            }
         }
 
         return response.getItem();

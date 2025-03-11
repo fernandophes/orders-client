@@ -7,19 +7,17 @@ import java.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import br.edu.ufersa.cc.sd.models.Order;
-import br.edu.ufersa.cc.sd.services.LocalizationService;
 import br.edu.ufersa.cc.sd.services.OrderService;
-import br.edu.ufersa.cc.sd.utils.Constants;
+import br.edu.ufersa.cc.sd.services.ProtectionService;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 
 public class FindController {
 
@@ -59,61 +57,33 @@ public class FindController {
 
     @FXML
     private void switchToListAll() throws IOException {
-        try {
-            App.setRoot("listAll");
-        } catch (final IOException e) {
-            final var alert = new Alert(AlertType.ERROR);
-            var exception = e.getCause();
-
-            var mustReconnect = false;
-            while (exception != null) {
-                if (exception instanceof ConnectionException) {
-                    alert.setTitle("Conexão perdida");
-                    alert.setContentText("Retornando ao servidor de localização");
-                    mustReconnect = true;
-                    break;
-                } else {
-                    alert.setTitle("Ocorreu um erro");
-                    alert.setContentText(e.getMessage());
-                }
-
-                exception = exception.getCause();
-            }
-
-            alert.setHeaderText(alert.getTitle());
-            alert.show();
-            LOG.error("", e);
-
-            if (mustReconnect) {
-                LocalizationService.setHost(Constants.DEFAULT_HOST);
-                LocalizationService.setPort(Constants.LOCALIZATION_PORT);
-                App.setRoot("reconnect");
-            }
-        }
+        ProtectionService.protect(() -> App.setRoot("listAll"), LOG);
     }
 
     @FXML
-    private void readOrder() {
-        try {
-            final var code = Long.parseLong(codeShow.getText());
-            final var order = service.findByCode(code);
+    private void readOrder() throws IOException {
+        ProtectionService.protect(() -> {
+            try {
+                final var code = Long.parseLong(codeShow.getText());
+                final var order = service.findByCode(code);
 
-            if (order == null) {
-                throw new OperationException("A ordem não existe");
+                if (order == null) {
+                    throw new OperationException("A ordem não existe");
+                }
+
+                showOrder(order);
+            } catch (final NumberFormatException e) {
+                final var alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Código inválido");
+                alert.setContentText("O código precisa ser um número válido");
+                alert.show();
+            } catch (final OperationException e) {
+                final var alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Ordem não encontrada");
+                alert.setContentText("O código informado não pertence a nenhuma ordem");
+                alert.show();
             }
-
-            showOrder(order);
-        } catch (final NumberFormatException e) {
-            final var alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Código inválido");
-            alert.setContentText("O código precisa ser um número válido");
-            alert.show();
-        } catch (final OperationException e) {
-            final var alert = new Alert(AlertType.WARNING);
-            alert.setTitle("Ordem não encontrada");
-            alert.setContentText("O código informado não pertence a nenhuma ordem");
-            alert.show();
-        }
+        }, LOG);
     }
 
     @FXML
@@ -141,22 +111,26 @@ public class FindController {
     }
 
     @FXML
-    private void update() {
-        currentOrder.setName(nameShow.getText());
-        currentOrder.setDescription(descriptionShow.getText());
-        service.update(currentOrder);
+    private void update() throws IOException {
+        ProtectionService.protect(() -> {
+            currentOrder.setName(nameShow.getText());
+            currentOrder.setDescription(descriptionShow.getText());
+            service.update(currentOrder);
+        }, LOG);
     }
 
     @FXML
-    private void delete() {
-        service.delete(currentOrder);
+    private void delete() throws IOException {
+        ProtectionService.protect(() -> service.delete(currentOrder), LOG);
     }
 
     @FXML
-    private void markAsDone() {
-        currentOrder.setDoneAt(LocalDateTime.now());
-        service.update(currentOrder);
-        showOrder(currentOrder);
+    private void markAsDone() throws IOException {
+        ProtectionService.protect(() -> {
+            currentOrder.setDoneAt(LocalDateTime.now());
+            service.update(currentOrder);
+            showOrder(currentOrder);
+        }, LOG);
     }
 
     @FXML

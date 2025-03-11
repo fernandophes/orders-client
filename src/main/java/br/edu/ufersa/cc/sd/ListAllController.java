@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.services.OrderService;
+import br.edu.ufersa.cc.sd.services.ProtectionService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,6 +23,7 @@ import javafx.scene.input.MouseButton;
 
 public class ListAllController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ListAllController.class.getSimpleName());
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
 
     private OrderService service = new OrderService();
@@ -71,7 +76,7 @@ public class ListAllController {
     private Button markAsDoneButton;
 
     @FXML
-    protected void initialize() {
+    protected void initialize() throws IOException {
         refreshTable();
     }
 
@@ -86,30 +91,32 @@ public class ListAllController {
     }
 
     @FXML
-    private void refreshTable() {
-        table.setRowFactory(tab -> {
-            final var row = new TableRow<Order>();
+    private void refreshTable() throws IOException {
+        ProtectionService.protect(() -> {
+            table.setRowFactory(tab -> {
+                final var row = new TableRow<Order>();
 
-            row.setOnMouseClicked(event -> {
-                if (event.getButton() == MouseButton.PRIMARY) {
-                    showOrder(row.getItem());
-                }
+                row.setOnMouseClicked(event -> {
+                    if (event.getButton() == MouseButton.PRIMARY) {
+                        showOrder(row.getItem());
+                    }
+                });
+
+                return row;
             });
 
-            return row;
-        });
+            codeColumn.setCellValueFactory(new PropertyValueFactory<Order, Long>("code"));
+            nameColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("name"));
+            descriptionColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("description"));
+            createdAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("createdAt"));
+            doneAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("doneAt"));
 
-        codeColumn.setCellValueFactory(new PropertyValueFactory<Order, Long>("code"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("name"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("description"));
-        createdAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("createdAt"));
-        doneAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("doneAt"));
+            final var orders = FXCollections.observableArrayList(service.listAll());
+            table.setItems(orders);
 
-        final var orders = FXCollections.observableArrayList(service.listAll());
-        table.setItems(orders);
-
-        final var count = service.countAll();
-        countLabel.setText("Total: " + count);
+            final var count = service.countAll();
+            countLabel.setText("Total: " + count);
+        }, LOG);
     }
 
     @FXML
@@ -137,25 +144,31 @@ public class ListAllController {
     }
 
     @FXML
-    private void update() {
-        currentOrder.setName(nameShow.getText());
-        currentOrder.setDescription(descriptionShow.getText());
-        service.update(currentOrder);
-        refreshTable();
+    private void update() throws IOException {
+        ProtectionService.protect(() -> {
+            currentOrder.setName(nameShow.getText());
+            currentOrder.setDescription(descriptionShow.getText());
+            service.update(currentOrder);
+            refreshTable();
+        }, LOG);
     }
 
     @FXML
-    private void delete() {
-        service.delete(currentOrder);
-        refreshTable();
+    private void delete() throws IOException {
+        ProtectionService.protect(() -> {
+            service.delete(currentOrder);
+            refreshTable();
+        }, LOG);
     }
 
     @FXML
-    private void markAsDone() {
-        currentOrder.setDoneAt(LocalDateTime.now());
-        service.update(currentOrder);
-        showOrder(currentOrder);
-        refreshTable();
+    private void markAsDone() throws IOException {
+        ProtectionService.protect(() -> {
+            currentOrder.setDoneAt(LocalDateTime.now());
+            service.update(currentOrder);
+            showOrder(currentOrder);
+            refreshTable();
+        }, LOG);
     }
 
 }
