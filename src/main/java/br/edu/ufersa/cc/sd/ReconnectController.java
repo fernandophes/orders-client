@@ -6,8 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
+import br.edu.ufersa.cc.sd.exceptions.CustomException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
-import br.edu.ufersa.cc.sd.services.SocketService;
+import br.edu.ufersa.cc.sd.services.LocalizationService;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -30,20 +31,21 @@ public class ReconnectController {
 
     @FXML
     protected void initialize() {
-        addressField.setText(SocketService.getHost());
-        portField.setText(SocketService.getPort().toString());
+        addressField.setText(LocalizationService.getHost());
+        portField.setText(LocalizationService.getPort().toString());
     }
 
     @FXML
     private void retry() throws IOException {
-        SocketService.setHost(addressField.getText());
-        SocketService.setPort(Integer.parseInt(portField.getText()));
+        LocalizationService.setHost(addressField.getText());
+        LocalizationService.setPort(Integer.parseInt(portField.getText()));
 
         try {
+            LocalizationService.localizeAndUpdate();
             App.setRoot("listAll");
-        } catch (final IOException e) {
+        } catch (final IOException | CustomException e) {
             final var alert = new Alert(AlertType.ERROR);
-            var exception = e.getCause();
+            Throwable exception = e;
 
             while (exception != null) {
                 alert.setContentText(exception.getMessage());
@@ -61,6 +63,7 @@ public class ReconnectController {
                 exception = exception.getCause();
             }
 
+            alert.setHeaderText(alert.getTitle());
             alert.show();
             LOG.error("", e);
         }

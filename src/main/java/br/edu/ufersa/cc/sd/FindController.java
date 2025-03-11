@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import br.edu.ufersa.cc.sd.models.Order;
+import br.edu.ufersa.cc.sd.services.LocalizationService;
 import br.edu.ufersa.cc.sd.services.OrderService;
+import br.edu.ufersa.cc.sd.utils.Constants;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -78,10 +80,13 @@ public class FindController {
                 exception = exception.getCause();
             }
 
+            alert.setHeaderText(alert.getTitle());
             alert.show();
             LOG.error("", e);
 
             if (mustReconnect) {
+                LocalizationService.setHost(Constants.DEFAULT_HOST);
+                LocalizationService.setPort(Constants.LOCALIZATION_PORT);
                 App.setRoot("reconnect");
             }
         }

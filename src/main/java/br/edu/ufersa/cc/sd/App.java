@@ -2,9 +2,10 @@ package br.edu.ufersa.cc.sd;
 
 import java.io.IOException;
 
+import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
+import br.edu.ufersa.cc.sd.services.LocalizationService;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.LoadException;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,11 +24,13 @@ public class App extends Application {
     @Override
     public void start(final Stage stage) throws IOException {
         try {
+            LocalizationService.localizeAndUpdate();
+
             setScene(new Scene(loadFXML("listAll"), 640, 480));
             stage.setScene(scene);
             stage.setMaximized(true);
             stage.show();
-        } catch (final LoadException e) {
+        } catch (final IOException | ConnectionException e) {
             setScene(new Scene(loadFXML("reconnect"), 640, 480));
             stage.setScene(scene);
             stage.setMaximized(true);

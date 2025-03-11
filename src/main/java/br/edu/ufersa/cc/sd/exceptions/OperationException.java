@@ -1,6 +1,6 @@
 package br.edu.ufersa.cc.sd.exceptions;
 
-public class OperationException extends RuntimeException {
+public class OperationException extends CustomException {
 
     public OperationException(final String message) {
         super(message);

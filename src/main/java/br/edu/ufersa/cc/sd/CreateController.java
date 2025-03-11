@@ -53,6 +53,7 @@ public class CreateController {
                 exception = exception.getCause();
             }
 
+            alert.setHeaderText(alert.getTitle());
             alert.show();
             LOG.error("", e);
 

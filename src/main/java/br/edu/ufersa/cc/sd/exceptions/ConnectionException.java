@@ -1,7 +1,7 @@
 package br.edu.ufersa.cc.sd.exceptions;
 
-public class ConnectionException extends RuntimeException {
-    
+public class ConnectionException extends CustomException {
+
     public ConnectionException(final String message) {
         super(message);
     }
@@ -13,4 +13,5 @@ public class ConnectionException extends RuntimeException {
     public ConnectionException(final Throwable cause) {
         super(cause);
     }
+
 }

@@ -29,7 +29,7 @@
          <children>
             <VBox alignment="TOP_CENTER" prefWidth="300.0" spacing="12.0" style="-fx-background-color: rgba(255, 255, 255, 0.2); -fx-background-radius: 16px;">
                <children>
-                  <Label fx:id="labelShow" text="Serviço não encontrado no IP" textAlignment="CENTER" textFill="WHITE">
+                  <Label fx:id="labelShow" text="Serviço de localização não encontrado no endereço" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font>
@@ -37,7 +37,7 @@
                         <Insets />
                      </VBox.margin>
                   </Label>
-                  <TextField fx:id="addressField" alignment="CENTER" onKeyTyped="#verifyRetryButton" promptText="Endereço" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-text-fill: #fff;">
+                  <TextField fx:id="addressField" alignment="CENTER" onKeyTyped="#verifyRetryButton" promptText="Host" style="-fx-background-color: rgba(255, 255, 255, 0.1); -fx-text-fill: #fff;">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
