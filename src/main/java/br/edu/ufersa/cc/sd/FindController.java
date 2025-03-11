@@ -4,13 +4,16 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.services.OrderService;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 
 public class FindController {
 
@@ -54,9 +57,26 @@ public class FindController {
 
     @FXML
     private void readOrder() {
-        final var code = Long.parseLong(codeShow.getText());
-        final var order = service.findByCode(code);
-        showOrder(order);
+        try {
+            final var code = Long.parseLong(codeShow.getText());
+            final var order = service.findByCode(code);
+
+            if (order == null) {
+                throw new OperationException("A ordem não existe");
+            }
+
+            showOrder(order);
+        } catch (final NumberFormatException e) {
+            final var alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Código inválido");
+            alert.setContentText("O código precisa ser um número válido");
+            alert.show();
+        } catch (final OperationException e) {
+            final var alert = new Alert(AlertType.WARNING);
+            alert.setTitle("Ordem não encontrada");
+            alert.setContentText("O código informado não pertence a nenhuma ordem");
+            alert.show();
+        }
     }
 
     @FXML

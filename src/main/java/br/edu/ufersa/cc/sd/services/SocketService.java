@@ -14,15 +14,22 @@ import br.edu.ufersa.cc.sd.dto.Response;
 import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SocketService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SocketService.class.getSimpleName());
 
-    private static final String HOST = "localhost";
-    private static final Integer PORT = 8484;
+    @Getter
+    @Setter
+    private static String host = "localhost";
+
+    @Getter
+    @Setter
+    private static Integer port = 8485;
 
     private static SocketService instance;
 
@@ -40,7 +47,7 @@ public class SocketService {
 
     public <I extends Serializable, O extends Serializable> Response<O> callAndTransform(final Request<I> request) {
         LOG.info("Iniciando cliente...");
-        try (final var socket = new Socket(HOST, PORT)) {
+        try (final var socket = new Socket(host, port)) {
             LOG.info("Conectado ao servidor");
             final var output = new ObjectOutputStream(socket.getOutputStream());
             final var input = new ObjectInputStream(socket.getInputStream());
