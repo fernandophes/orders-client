@@ -6,43 +6,17 @@ import java.time.format.DateTimeFormatter;
 
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.services.OrderService;
-import javafx.collections.FXCollections;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
 
-public class ListAllController {
+public class FindController {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
 
     private OrderService service = OrderService.getInstance();
-
-    @FXML
-    private TableView<Order> table;
-
-    @FXML
-    private TableColumn<Order, Long> codeColumn;
-
-    @FXML
-    private TableColumn<Order, String> nameColumn;
-
-    @FXML
-    private TableColumn<Order, String> descriptionColumn;
-
-    @FXML
-    private TableColumn<Order, String> createdAtColumn;
-
-    @FXML
-    private TableColumn<Order, String> doneAtColumn;
-
-    @FXML
-    private Label countLabel;
 
     private Order currentOrder;
 
@@ -54,6 +28,9 @@ public class ListAllController {
 
     @FXML
     private Label doneAtShow;
+
+    @FXML
+    private TextField codeShow;
 
     @FXML
     private TextField nameShow;
@@ -71,45 +48,15 @@ public class ListAllController {
     private Button markAsDoneButton;
 
     @FXML
-    protected void initialize() {
-        refreshTable();
+    private void switchToListAll() throws IOException {
+        App.setRoot("listAll");
     }
 
     @FXML
-    private void switchToCreate() throws IOException {
-        App.setRoot("create");
-    }
-
-    @FXML
-    private void switchToFind() throws IOException {
-        App.setRoot("find");
-    }
-
-    @FXML
-    private void refreshTable() {
-        table.setRowFactory(tab -> {
-            final var row = new TableRow<Order>();
-
-            row.setOnMouseClicked(event -> {
-                if (event.getButton() == MouseButton.PRIMARY) {
-                    showOrder(row.getItem());
-                }
-            });
-
-            return row;
-        });
-
-        codeColumn.setCellValueFactory(new PropertyValueFactory<Order, Long>("code"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("name"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("description"));
-        createdAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("createdAt"));
-        doneAtColumn.setCellValueFactory(new PropertyValueFactory<Order, String>("doneAt"));
-
-        final var orders = FXCollections.observableArrayList(service.listAll());
-        table.setItems(orders);
-
-        final var count = service.countAll();
-        countLabel.setText("Total: " + count);
+    private void readOrder() {
+        final var code = Long.parseLong(codeShow.getText());
+        final var order = service.findByCode(code);
+        showOrder(order);
     }
 
     @FXML
@@ -141,13 +88,11 @@ public class ListAllController {
         currentOrder.setName(nameShow.getText());
         currentOrder.setDescription(descriptionShow.getText());
         service.update(currentOrder);
-        refreshTable();
     }
 
     @FXML
     private void delete() {
         service.delete(currentOrder);
-        refreshTable();
     }
 
     @FXML
@@ -155,7 +100,11 @@ public class ListAllController {
         currentOrder.setDoneAt(LocalDateTime.now());
         service.update(currentOrder);
         showOrder(currentOrder);
-        refreshTable();
+    }
+
+    @FXML
+    private void verifySaveButton(Event ignore) {
+        updateButton.setDisable(nameShow.getText().isEmpty());
     }
 
 }

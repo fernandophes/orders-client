@@ -48,6 +48,18 @@ public class OrderRepository {
         }
     }
 
+    public Order findByCode(final Long code) {
+        final var order = new Order().setCode(code);
+        final var request = new Request<>(Operation.FIND, order);
+        final var response = socketService.call(request);
+
+        if (ResponseStatus.ERROR.equals(response.getStatus())) {
+            throw new OperationException(response.getMessage());
+        }
+
+        return response.getItem();
+    }
+
     public void update(final Order order) {
         final var request = new Request<>(Operation.UPDATE, order);
         final var response = socketService.call(request);

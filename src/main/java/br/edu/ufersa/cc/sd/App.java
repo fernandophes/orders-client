@@ -9,8 +9,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
-
 /**
  * JavaFX App
  */

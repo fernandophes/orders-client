@@ -34,6 +34,10 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    public Order findByCode(final Long code) {
+        return orderRepository.findByCode(code);
+    }
+
     public void update(final Order order) {
         orderRepository.update(order);
     }
