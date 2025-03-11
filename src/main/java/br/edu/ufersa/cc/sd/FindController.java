@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.services.OrderService;
@@ -17,9 +21,10 @@ import javafx.scene.control.Alert.AlertType;
 
 public class FindController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(FindController.class.getSimpleName());
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
 
-    private OrderService service = OrderService.getInstance();
+    private OrderService service = new OrderService();
 
     private Order currentOrder;
 
@@ -52,7 +57,34 @@ public class FindController {
 
     @FXML
     private void switchToListAll() throws IOException {
-        App.setRoot("listAll");
+        try {
+            App.setRoot("listAll");
+        } catch (final IOException e) {
+            final var alert = new Alert(AlertType.ERROR);
+            var exception = e.getCause();
+
+            var mustReconnect = false;
+            while (exception != null) {
+                if (exception instanceof ConnectionException) {
+                    alert.setTitle("Conexão perdida");
+                    alert.setContentText("Retornando ao servidor de localização");
+                    mustReconnect = true;
+                    break;
+                } else {
+                    alert.setTitle("Ocorreu um erro");
+                    alert.setContentText(e.getMessage());
+                }
+
+                exception = exception.getCause();
+            }
+
+            alert.show();
+            LOG.error("", e);
+
+            if (mustReconnect) {
+                App.setRoot("reconnect");
+            }
+        }
     }
 
     @FXML

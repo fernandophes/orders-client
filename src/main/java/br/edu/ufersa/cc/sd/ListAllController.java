@@ -21,7 +21,7 @@ public class ListAllController {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
 
-    private OrderService service = OrderService.getInstance();
+    private OrderService service = new OrderService();
 
     @FXML
     private TableView<Order> table;

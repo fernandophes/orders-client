@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,33 +16,23 @@ import br.edu.ufersa.cc.sd.dto.Request;
 import br.edu.ufersa.cc.sd.dto.Response;
 import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
-import lombok.AccessLevel;
+import br.edu.ufersa.cc.sd.utils.Constants;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class SocketService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SocketService.class.getSimpleName());
 
     @Getter
     @Setter
-    private static String host = "localhost";
+    private static String host = Constants.DEFAULT_HOST;
 
     @Getter
     @Setter
-    private static Integer port = 8485;
-
-    private static SocketService instance;
-
-    public static SocketService getInstance() {
-        if (instance == null) {
-            instance = new SocketService();
-        }
-
-        return instance;
-    }
+    private static Integer port = Constants.LOCALIZATION_PORT;
 
     public <T extends Serializable> Response<T> call(final Request<T> request) {
         return callAndTransform(request);
@@ -56,15 +49,33 @@ public class SocketService {
             output.writeObject(request);
             output.flush();
 
+            // Preparar timeout
+            final var timer = new Timer();
+            final TimerTask timeout = new TimerTask() {
+                public void run() {
+                    try {
+                        input.close();
+                        output.close();
+                        throw new ConnectionException("Timeout: o serviço não respondeu a tempo");
+                    } catch (IOException ignore) {
+                        // Ignorar
+                    }
+                }
+            };
+            timer.schedule(timeout, 30_000);
+
             LOG.info("Aguardando resposta...");
             @SuppressWarnings("unchecked")
             final var response = (Response<O>) input.readObject();
+            timeout.cancel();
 
             input.close();
             output.close();
 
             LOG.info("Conexão encerrada");
             return response;
+        } catch (final ConnectException e) {
+            throw new ConnectionException("A conexão com " + host + ":" + port + " foi recusada", e);
         } catch (final IOException e) {
             throw new ConnectionException(e);
         } catch (final ClassNotFoundException e) {

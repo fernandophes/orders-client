@@ -10,23 +10,12 @@ import br.edu.ufersa.cc.sd.enums.ResponseStatus;
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.services.SocketService;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class OrderRepository {
 
-    private final SocketService socketService;
-
-    private static OrderRepository instance;
-
-    public static OrderRepository getInstance() {
-        if (instance == null) {
-            instance = new OrderRepository(SocketService.getInstance());
-        }
-
-        return instance;
-    }
+    private final SocketService socketService = new SocketService();
 
     public List<Order> listAll() {
         final var request = new Request<>(Operation.LIST, Order.class);

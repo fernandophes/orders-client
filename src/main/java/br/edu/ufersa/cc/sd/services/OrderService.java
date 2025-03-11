@@ -7,25 +7,14 @@ import org.slf4j.LoggerFactory;
 
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.repositories.OrderRepository;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class OrderService {
 
     private static final Logger LOG = LoggerFactory.getLogger(OrderService.class.getSimpleName());
 
-    private final OrderRepository orderRepository;
-
-    private static OrderService instance;
-
-    public static OrderService getInstance() {
-        if (instance == null) {
-            instance = new OrderService(OrderRepository.getInstance());
-        }
-
-        return instance;
-    }
+    private final OrderRepository orderRepository = new OrderRepository();
 
     public Long countAll() {
         LOG.info("Obtendo a quantidade de ordens...");
