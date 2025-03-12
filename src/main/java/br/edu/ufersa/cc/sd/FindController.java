@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.edu.ufersa.cc.sd.exceptions.OperationException;
 import br.edu.ufersa.cc.sd.models.Order;
@@ -21,7 +21,7 @@ import javafx.scene.control.TextField;
 
 public class FindController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(FindController.class.getSimpleName());
+    private static final Logger LOG = LogManager.getLogger(FindController.class.getSimpleName());
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm:ss");
 
     private OrderService service = new OrderService();

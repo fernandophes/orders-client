@@ -2,7 +2,7 @@ package br.edu.ufersa.cc.sd.services;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
+import org.apache.logging.log4j.Logger;
 
 import br.edu.ufersa.cc.sd.App;
 import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
@@ -30,15 +30,18 @@ public interface ProtectionService {
             while (exception != null) {
                 if (exception instanceof OperationException) {
                     alert.setTitle("Operação inválida");
+                    log.error(alert.getTitle());
                     break;
                 } else if (exception instanceof ConnectionException) {
                     alert.setTitle("Conexão perdida");
                     alert.setContentText("Retornando ao servidor de localização");
+                    log.error(alert.getTitle());
                     mustReconnect = true;
                     break;
                 } else {
                     alert.setTitle("Ocorreu um erro");
                     alert.setContentText(e.getMessage());
+                    log.error(alert.getTitle(), e);
                 }
 
                 exception = exception.getCause();
@@ -46,7 +49,6 @@ public interface ProtectionService {
 
             alert.setHeaderText(alert.getTitle());
             alert.show();
-            log.error("", e);
 
             if (mustReconnect) {
                 LocalizationService.setHost(Constants.DEFAULT_HOST);

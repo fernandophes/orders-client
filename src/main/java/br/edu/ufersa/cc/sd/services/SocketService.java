@@ -9,8 +9,8 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.edu.ufersa.cc.sd.dto.Request;
 import br.edu.ufersa.cc.sd.dto.Response;
@@ -24,7 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SocketService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SocketService.class.getSimpleName());
+    private static final Logger LOG = LogManager.getLogger(SocketService.class.getSimpleName());
 
     @Getter
     @Setter

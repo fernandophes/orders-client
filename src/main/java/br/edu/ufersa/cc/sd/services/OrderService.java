@@ -2,8 +2,8 @@ package br.edu.ufersa.cc.sd.services;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.repositories.OrderRepository;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OrderService.class.getSimpleName());
+    private static final Logger LOG = LogManager.getLogger(OrderService.class.getSimpleName());
 
     private final OrderRepository orderRepository = new OrderRepository();
 

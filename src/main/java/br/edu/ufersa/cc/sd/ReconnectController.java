@@ -2,8 +2,8 @@ package br.edu.ufersa.cc.sd;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import br.edu.ufersa.cc.sd.exceptions.ConnectionException;
 import br.edu.ufersa.cc.sd.exceptions.CustomException;
@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
 
 public class ReconnectController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ReconnectController.class.getSimpleName());
+    private static final Logger LOG = LogManager.getLogger(ReconnectController.class.getSimpleName());
 
     @FXML
     private TextField addressField;
@@ -52,12 +52,15 @@ public class ReconnectController {
 
                 if (exception instanceof OperationException) {
                     alert.setTitle("Operação inválida");
+                    LOG.error(alert.getTitle());
                     break;
                 } else if (exception instanceof ConnectionException) {
                     alert.setTitle("Conexão recusada");
+                    LOG.error(alert.getTitle());
                     break;
                 } else {
                     alert.setTitle("Ocorreu um erro");
+                    LOG.error(alert.getTitle(), e);
                 }
 
                 exception = exception.getCause();
@@ -65,7 +68,6 @@ public class ReconnectController {
 
             alert.setHeaderText(alert.getTitle());
             alert.show();
-            LOG.error("", e);
         }
     }
 
