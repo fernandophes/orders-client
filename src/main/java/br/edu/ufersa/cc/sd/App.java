@@ -25,17 +25,14 @@ public class App extends Application {
     public void start(final Stage stage) throws IOException {
         try {
             LocalizationService.localizeAndUpdate();
-
             setScene(new Scene(loadFXML("listAll"), 640, 480));
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
         } catch (final IOException | ConnectionException e) {
             setScene(new Scene(loadFXML("reconnect"), 640, 480));
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
         }
+
+        stage.setScene(scene);
+        stage.setMaximized(true);
+        stage.show();
     }
 
     public static void setRoot(final String fxml) throws IOException {

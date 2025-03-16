@@ -26,29 +26,48 @@ public interface ProtectionService {
             final var alert = new Alert(AlertType.ERROR);
             Throwable exception = e;
 
+            var mustShowError = true;
             var mustReconnect = false;
             while (exception != null) {
+                var mustBreak = false;
                 if (exception instanceof OperationException) {
                     alert.setTitle("Operação inválida");
                     log.error(alert.getTitle());
-                    break;
+                    mustBreak = true;
                 } else if (exception instanceof ConnectionException) {
-                    alert.setTitle("Conexão perdida");
-                    alert.setContentText("Retornando ao servidor de localização");
-                    log.error(alert.getTitle());
-                    mustReconnect = true;
-                    break;
+                    // Localizar novo endereço do Proxy
+                    LocalizationService.localizeAndUpdate();
+
+                    // Tentar executar a ação uma 2ª vez
+                    try {
+                        action.run();
+                        mustShowError = false;
+                        mustReconnect = false;
+                    } catch (final IOException | CustomException ignore) {
+                        alert.setTitle("Conexão perdida");
+                        alert.setContentText("Retornando ao servidor de localização");
+                        log.error(alert.getTitle());
+                        mustReconnect = true;
+                    }
+
+                    mustBreak = true;
                 } else {
                     alert.setTitle("Ocorreu um erro");
                     alert.setContentText(e.getMessage());
                     log.error(alert.getTitle(), e);
                 }
 
+                if (mustBreak) {
+                    break;
+                }
+
                 exception = exception.getCause();
             }
 
-            alert.setHeaderText(alert.getTitle());
-            alert.show();
+            if (mustShowError) {
+                alert.setHeaderText(alert.getTitle());
+                alert.show();
+            }
 
             if (mustReconnect) {
                 LocalizationService.setHost(Constants.DEFAULT_HOST);

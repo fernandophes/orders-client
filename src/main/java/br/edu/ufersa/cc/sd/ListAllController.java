@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import br.edu.ufersa.cc.sd.models.Order;
 import br.edu.ufersa.cc.sd.services.OrderService;
 import br.edu.ufersa.cc.sd.services.ProtectionService;
+import br.edu.ufersa.cc.sd.services.SocketService;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -49,6 +50,9 @@ public class ListAllController {
     @FXML
     private Label countLabel;
 
+    @FXML
+    private Label proxyLabel;
+
     private Order currentOrder;
 
     @FXML
@@ -78,6 +82,7 @@ public class ListAllController {
     @FXML
     protected void initialize() throws IOException {
         refreshTable();
+        proxyLabel.setText("Acessando proxy " + SocketService.getHost() + ":" + SocketService.getPort());
     }
 
     @FXML

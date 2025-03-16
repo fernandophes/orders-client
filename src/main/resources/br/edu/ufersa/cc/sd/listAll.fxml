@@ -108,8 +108,10 @@
                   <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
                </padding>
             </VBox>
-         </children>
+         </children> 
       </HBox>
+      <Pane VBox.vgrow="ALWAYS" />
+      <Label fx:id="proxyLabel" text="Acessando proxy" textFill="WHITE" />
     </children>
    <padding>
       <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />

@@ -46,7 +46,7 @@ public class LocalizationService {
             final var address = response.getItem();
 
             LOG.info("Localização do Servidor Proxy recebida: {}", address);
-            SocketService.setHost(address.getHostName());
+            SocketService.setHost(address.getHostString());
             SocketService.setPort(address.getPort());
 
             LOG.info("Utilizando novo endereço", address);
