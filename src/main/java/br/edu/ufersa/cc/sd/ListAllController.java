@@ -82,7 +82,6 @@ public class ListAllController {
     @FXML
     protected void initialize() throws IOException {
         refreshTable();
-        proxyLabel.setText("Acessando proxy " + SocketService.getHost() + ":" + SocketService.getPort());
     }
 
     @FXML
@@ -122,6 +121,7 @@ public class ListAllController {
             final var count = service.countAll();
             countLabel.setText("Total: " + count);
         }, LOG);
+        proxyLabel.setText("Acessando proxy " + SocketService.getHost() + ":" + SocketService.getPort());
     }
 
     @FXML

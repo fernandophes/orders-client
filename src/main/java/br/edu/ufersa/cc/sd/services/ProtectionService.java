@@ -35,11 +35,11 @@ public interface ProtectionService {
                     log.error(alert.getTitle());
                     mustBreak = true;
                 } else if (exception instanceof ConnectionException) {
-                    // Localizar novo endereço do Proxy
-                    LocalizationService.localizeAndUpdate();
-
-                    // Tentar executar a ação uma 2ª vez
                     try {
+                        // Localizar novo endereço do Proxy
+                        LocalizationService.localizeAndUpdate();
+
+                        // Tentar executar a ação uma 2ª vez
                         action.run();
                         mustShowError = false;
                         mustReconnect = false;
